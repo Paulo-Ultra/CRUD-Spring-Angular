@@ -25,11 +25,11 @@ public class CourseService {
     public List<Course> list() {
         return courseRepository.findAll();
     }
-    public Optional<Course> findById(@PathVariable @NotNull @Positive Long id) {
+    public Optional<Course> findById(@NotNull @Positive Long id) {
         return courseRepository.findById(id);
     }
 
-    public Course create(@RequestBody @Valid Course course) {
+    public Course create(@Valid Course course) {
         return courseRepository.save(course);
     }
 
@@ -42,7 +42,7 @@ public class CourseService {
                 });
     }
 
-    public boolean delete(@PathVariable @NotNull @Positive Long id) {
+    public boolean delete(@NotNull @Positive Long id) {
         return courseRepository.findById(id)
                 .map(recordFound -> {
                     courseRepository.deleteById(id);
