@@ -2,6 +2,8 @@ package com.paulo.crudspring.model;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.paulo.crudspring.enums.CategoryEnum;
+import com.paulo.crudspring.enums.converters.CategoryConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,10 +33,9 @@ public class Course {
     private String name;
 
     @NotNull
-    @Length(max = 10)
-    @Pattern(regexp = "Back-end|Front-end")
     @Column(length = 10, nullable = false)
-    private String category;
+    @Convert(converter = CategoryConverter.class)
+    private CategoryEnum category;
 
     @NotNull
     @Length(max = 10)
