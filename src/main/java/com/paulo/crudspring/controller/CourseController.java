@@ -25,7 +25,7 @@ public class CourseController {
 
     //@RequestMapping(method = RequestMethod.GET) -> Ou usa GetMapping ou dessa forma, não há diferença prática
     @GetMapping
-    public @ResponseBody List<CourseDTO> list() {
+    public List<CourseDTO> list() {
 
         return courseService.list();
     }
