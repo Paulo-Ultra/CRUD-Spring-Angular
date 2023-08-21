@@ -3,6 +3,7 @@ package com.paulo.crudspring.service;
 import com.paulo.crudspring.dto.CourseDTO;
 import com.paulo.crudspring.dto.mapper.CourseMapper;
 import com.paulo.crudspring.exception.RecordNotFoundException;
+import com.paulo.crudspring.model.Course;
 import com.paulo.crudspring.repository.CourseRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -47,15 +48,21 @@ public class CourseService {
                 .orElseThrow(() -> new RecordNotFoundException(id));
     }
 
-    public CourseDTO create(@Valid @NotNull CourseDTO course) {
-        return courseMapper.toDTO(courseRepository.save(courseMapper.toEntity(course)));
+    public CourseDTO create(@Valid @NotNull CourseDTO courseDTO) {
+        return courseMapper.toDTO(courseRepository.save(courseMapper.toEntity(courseDTO)));
     }
 
-    public CourseDTO update(@NotNull @Positive Long id, @Valid @NotNull CourseDTO course) {
+    public CourseDTO update(@NotNull @Positive Long id, @Valid @NotNull CourseDTO courseDTO) {
         return courseRepository.findById(id)
                 .map(recordFound -> {
-                    recordFound.setName(course.name());
-                    recordFound.setCategory(courseMapper.convertCategoryValue(course.category()));
+                    Course course = courseMapper.toEntity(courseDTO);
+                    recordFound.setName(courseDTO.name());
+                    recordFound.setCategory(courseMapper.convertCategoryValue(courseDTO.category()));
+                    //recordFound.setLessons(course.getLessons());
+                    recordFound.getLessons().clear();
+                    //course.getLessons().forEach(lesson -> recordFound.getLessons().add(lesson));
+                    //Mesma coisa na expressão lambda
+                    course.getLessons().forEach(recordFound.getLessons()::add);
                     return courseMapper.toDTO(courseRepository.save(recordFound));
                 }).orElseThrow(() -> new RecordNotFoundException(id));
     }

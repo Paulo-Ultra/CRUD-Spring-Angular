@@ -4,6 +4,7 @@ import com.paulo.crudspring.dto.CourseDTO;
 import com.paulo.crudspring.dto.LessonDTO;
 import com.paulo.crudspring.enums.CategoryEnum;
 import com.paulo.crudspring.model.Course;
+import com.paulo.crudspring.model.Lesson;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -33,6 +34,18 @@ public class CourseMapper {
         }
         course.setName(courseDTO.name());
         course.setCategory(convertCategoryValue(courseDTO.category()));
+
+        List<Lesson> lessons = courseDTO.lessons().stream().map(lessonDTO -> {
+            //var -> Inferência de tipos
+            var lesson = new Lesson();
+            lesson.setId(lessonDTO.id());
+            lesson.setName(lessonDTO.name());
+            lesson.setYoutubeUrl(lessonDTO.youtubeUrl());
+            lesson.setCourse(course);
+            return lesson;
+        }).collect(Collectors.toList());
+        course.setLessons(lessons);
+
         return course;
     }
 
