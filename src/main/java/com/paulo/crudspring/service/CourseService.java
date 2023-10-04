@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Validated
 @Service
@@ -33,7 +32,7 @@ public class CourseService {
         Page<Course> pageCourse = courseRepository.findAll(PageRequest.of(page, size));
         List<CourseDTO> courses = pageCourse.get()
                 .map(courseMapper::toDTO)
-                .collect(Collectors.toList());
+                .toList();
         return new CoursePageDTO(courses, pageCourse.getTotalElements(), pageCourse.getTotalPages());
 
     /*public List<CourseDTO> list() {
