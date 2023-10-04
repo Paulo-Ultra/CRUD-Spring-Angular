@@ -1,13 +1,17 @@
 package com.paulo.crudspring.service;
 
 import com.paulo.crudspring.dto.CourseDTO;
+import com.paulo.crudspring.dto.CoursePageDTO;
 import com.paulo.crudspring.dto.mapper.CourseMapper;
 import com.paulo.crudspring.exception.RecordNotFoundException;
 import com.paulo.crudspring.model.Course;
 import com.paulo.crudspring.repository.CourseRepository;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -25,12 +29,19 @@ public class CourseService {
         this.courseMapper = courseMapper;
     }
 
-    public List<CourseDTO> list() {
+    public CoursePageDTO list(int page, @Positive @Max(100) int size) {
+        Page<Course> pageCourse = courseRepository.findAll(PageRequest.of(page, size));
+        List<CourseDTO> courses = pageCourse.get()
+                .map(courseMapper::toDTO)
+                .collect(Collectors.toList());
+        return new CoursePageDTO(courses, pageCourse.getTotalElements(), pageCourse.getTotalPages());
+
+    /*public List<CourseDTO> list() {
         return courseRepository.findAll()
                 .stream()
 //                .map(course -> courseMapper.toDTO(course)) -- Forma sem ser a simplificada debaixo
                 .map(courseMapper::toDTO)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
         /*
         Forma de instanciar dtos sem uso de um mapper
         List<Course> courses = courseRepository.findAll();

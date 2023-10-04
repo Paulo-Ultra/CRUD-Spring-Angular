@@ -1,15 +1,16 @@
 package com.paulo.crudspring.controller;
 
 import com.paulo.crudspring.dto.CourseDTO;
+import com.paulo.crudspring.dto.CoursePageDTO;
 import com.paulo.crudspring.service.CourseService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Validated
 @RestController
@@ -25,9 +26,9 @@ public class CourseController {
 
     //@RequestMapping(method = RequestMethod.GET) -> Ou usa GetMapping ou dessa forma, não há diferença prática
     @GetMapping
-    public List<CourseDTO> list() {
-
-        return courseService.list();
+    public CoursePageDTO list(@RequestParam(defaultValue = "0") @PositiveOrZero int page,
+                              @RequestParam(defaultValue = "10") @Positive @Max(100) int size) {
+        return courseService.list(page, size);
     }
 
     @GetMapping("/{id}")
